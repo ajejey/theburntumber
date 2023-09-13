@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-mongoose.models = {}
+// mongoose.models = {}
 
 const userSchema = new mongoose.Schema({
     fullName: String,
@@ -11,6 +11,12 @@ const userSchema = new mongoose.Schema({
         unique: true,
     },
     password: {
+        type: String,
+    },
+    googleId: {
+        type: String,
+    },
+    image: {
         type: String,
     },
     phoneNo: {
@@ -44,6 +50,4 @@ const userSchema = new mongoose.Schema({
     // Add more fields as needed for user management and future expansion
 });
 
-const User = mongoose.model('User', userSchema);
-
-module.exports = User;
+export default mongoose.models.User || mongoose.model('User', userSchema)

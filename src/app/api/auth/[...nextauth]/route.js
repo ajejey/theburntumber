@@ -5,7 +5,7 @@ import connect from "@/utils/db"
 import User from "@/models/User"
 import bcrypt from "bcryptjs"
 
-const handler = NextAuth({
+export const authOptions = {
     providers: [
         GoogleProvider({
             clientId: process.env.GOOGLE_CLIENT_ID,
@@ -52,23 +52,58 @@ const handler = NextAuth({
         strategy: "jwt"
     },
     callbacks: {
-        jwt: async ({ token, user }) => {
-            user && (token.user = user)
-            return token
+        async signIn({ account, profile }) {
+            // console.log("INSIDE SIGN IN CALLBACK", account, profile);
+            if (account.provider === "google") {
+                const email = profile.email;
+                const googleId = profile.sub;
+                await connect();
+                const existingUser = await User.findOne({ email: email });
+                if (existingUser) {
+                    // update existingUser with googleId
+                    await User.findOneAndUpdate({ email: email }, { googleId: googleId });
+                } else {
+                    // create new user with googleId
+                    const newUser = new User({
+                        fullName: profile.name,
+                        email: email,
+                        googleId: googleId,
+                        image: profile.picture
+                    })
+                    await newUser.save();
+                }
+            }
+            return true
+        },
+        async jwt({ token }) {
+            // console.log("INSIDE JWT Callback", token);
+            const email = token.email;
+            const googleId = token.sub;
+            await connect();
+            const existingUser = await User.findOne({ email: email });
+            if (existingUser) {
+                token.id = existingUser._id;
+                token.googleId = googleId;
+                token.fullName = existingUser.fullName;
+                token.image = existingUser.image;
+            }
+            // console.log("Final TOken ", token);
+            return token;
         },
         session: async ({ session, token }) => {
-            const user = token.user
-            session.user = user
-            return session
-        }
-    }
-})
+            const user = token.user;
+            session.user = user;
+            return session;
+        },
+        session: async ({ session, token }) => {
+            const user = token.user;
+            session.user = user;
+            return session;
+        },
+    },
+    database: process.env.DATABASE_URL
+}
+
+const handler = NextAuth(authOptions)
 
 export { handler as GET, handler as POST }
-
-
-// if (user.password === credentials?.password) {
-//     return user
-// } else {
-//     throw new Error("Wrong password")
-// }

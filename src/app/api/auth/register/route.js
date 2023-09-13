@@ -25,16 +25,21 @@ export const POST = async (request) => {
         return new NextResponse("Passwords do not match.", { status: 400 });
     }
 
-    const existingUser = await User.findOne({ email });
-    if (existingUser) {
-        console.log("User already exists.");
-        return new NextResponse("User already exists.", { status: 400 });
-    }
-
     // Hash the password
     const salt = bcrypt.genSaltSync(10);
     const hashedPassword = bcrypt.hashSync(password, salt);
     console.log("hashedPassword", hashedPassword);
+
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+        console.log("User already exists.");
+        // check if googleId exists in existingUser
+        if (existingUser.googleId) {
+            return new NextResponse("User already signed up with Google, please sign in with Google.", { status: 400 });
+        } else {
+            return new NextResponse("User already exists.", { status: 400 });
+        }
+    }
 
     const newUser = new User({ fullName, email, password: hashedPassword });
 

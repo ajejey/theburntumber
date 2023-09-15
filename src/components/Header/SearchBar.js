@@ -1,35 +1,41 @@
 'use client'
-import { FormControl, IconButton, InputAdornment, InputLabel, OutlinedInput } from '@mui/material'
-import React from 'react'
-import SearchIcon from '@mui/icons-material/Search';
-import styles from './Header.module.css'
+import { Button, IconButton, Input, InputUnstyled, styled } from '@mui/joy';
+import { Search } from '@mui/icons-material';
+
+const SearchButton = styled(Button)({
+    borderRadius: '50%',
+});
 
 function SearchBar() {
+    const handleSubmit = (event) => {
+        event.preventDefault();
+    }
     return (
-        <FormControl
-            className={styles.searchBar}
-            variant="outlined"
-        >
-            <OutlinedInput
-                id="search"
-                type='text'
-                size='small'
-                style={{ borderRadius: '30px' }}
-                placeholder='Search something...'
-                endAdornment={
-                    <InputAdornment position="end">
-                        <IconButton
-                            aria-label="search"
-                            edge="end"
-                        >
-                            <SearchIcon />
-                        </IconButton>
-                    </InputAdornment>
-                }
+        <form onSubmit={handleSubmit}>
+            <Input
+                sx={{ '--Input-radius': `21px` }}
+                placeholder="Search something…"
+                endDecorator={
+                    <IconButton sx={{ '--IconButton-radius': `21px` }}>
+                        <Search variant="soft" />
+                    </IconButton>
 
+                }
             />
-        </FormControl>
-    )
+        </form>
+
+    );
 }
 
-export default SearchBar
+export default SearchBar;
+
+
+{/* <InputUnstyled
+            component={Input}
+            placeholder="Search something..."
+            endAdornment={
+                <SearchButton>
+                    <Search />
+                </SearchButton>
+            }
+        /> */}

@@ -11,10 +11,10 @@ import Link from 'next/link'
 
 function LoginForm() {
     const session = useSession()
-    const router = useRouter()
-    if (session) {
-        router.push("/")
-    }
+    // const router = useRouter()
+    // if (session) {
+    //     router.push("/")
+    // }
     const { handleSubmit, control, formState: { errors } } = useForm();
     console.log("session", session)
 
@@ -98,3 +98,5 @@ function LoginForm() {
 }
 
 export default LoginForm
+
+

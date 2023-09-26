@@ -5,14 +5,23 @@
     padding: 1rem 2rem;
 }
 
+.logo {
+    font-size: 1.5rem;
+}
+
+.logo::after {
+    content: "Burnt Umber";
+}
+
 .search {
     display: flex;
     align-items: center;
     gap: 1rem;
+    width: 50vw;
 }
 
 .searchBar {
-    width: 50vw;
+    width: 70vw;
 }
 
 .icons {
@@ -28,5 +37,13 @@
 
     .search {
         width: 40vw;
+    }
+
+    .logo {
+        font-size: 1.8rem;
+    }
+
+    .logo::after {
+        content: "BU";
     }
 }

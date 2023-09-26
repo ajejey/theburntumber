@@ -91,13 +91,9 @@ export const authOptions = {
             return token;
         },
         session: async ({ session, token }) => {
-            const user = token.user;
-            session.user = user;
-            return session;
-        },
-        session: async ({ session, token }) => {
-            const user = token.user;
-            session.user = user;
+            // console.log("INSIDE SESSION CALLBACK", session, token);
+            // const user = token.user;
+            // session.user = user;
             return session;
         },
     },

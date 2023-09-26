@@ -1,6 +1,7 @@
 'use client'
 import { Button, IconButton, Input, InputUnstyled, styled } from '@mui/joy';
 import { Search } from '@mui/icons-material';
+import styles from './Header.module.css';
 
 const SearchButton = styled(Button)({
     borderRadius: '50%',
@@ -13,6 +14,7 @@ function SearchBar() {
     return (
         <form onSubmit={handleSubmit}>
             <Input
+                className={styles.search}
                 sx={{ '--Input-radius': `21px` }}
                 placeholder="Search something…"
                 endDecorator={

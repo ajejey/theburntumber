@@ -5,7 +5,9 @@ function ProfileLayout({ children }) {
     return (
         <div>
             <Header />
-            {children}
+            <div className="container">
+                {children}
+            </div>
         </div>
     )
 }

@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 const artworkSchema = new mongoose.Schema({
     name: String,
     description: String,
-    image: String,
+    images: [String],
     artist: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',

@@ -3,6 +3,9 @@ import { Box, Button, Card, Divider, FormControl, FormLabel, Input, Stack, Texta
 import React, { useState } from 'react'
 import FileUploadRoundedIcon from '@mui/icons-material/FileUploadRounded';
 import { useForm, Controller, useController } from 'react-hook-form';
+import { convertToWebP, uploadToFireBase } from '@/utils/utilFunctions';
+import CircularProgress from '@mui/joy/CircularProgress';
+import Image from 'next/image';
 
 const VisuallyHiddenInput = styled('input')`
   clip: rect(0 0 0 0);
@@ -18,20 +21,51 @@ const VisuallyHiddenInput = styled('input')`
 
 function ProfilePage({ user }) {
     const { control, handleSubmit, register } = useForm();
-    const [fileName, setFileName] = useState('');
-    const [file, setFile] = useState('');
-    const [image, setImage] = useState('');
+    const [fileNames, setFileNames] = useState([]);
+    const [images, setImages] = useState([]);
+    const [totalFiles, setTotalFiles] = useState(0);
+    const [completedFiles, setCompletedFiles] = useState(0);
+    const [progress, setProgress] = useState(0);
 
-    const onSubmit = data => {
-        console.log(data);
-    }
+    const onSubmit = async (data) => {
+        const files = Object.values(data.file); // Convert data.file object into an array
+        await Promise.all(files.map(async (file) => {
+            const url = await uploadToFireBase(file);
+            data.firebaseUrls = data.firebaseUrls || []; 
+            data.firebaseUrls.push(url); // Add the Firebase URL to the data object
+        })); 
+        
+        // delete file key:value pair from data
+        delete data.file;
+        console.log(data);      
+    
+      }
 
-    const handleFileChange = (event) => {
-        setFileName(event.target.files[0].name);
-        setFile(event.target.value);
-        setImage(URL.createObjectURL(event.target.files[0]));
-        console.log("Image url", URL.createObjectURL(event.target.files[0]))
-    }
+    const handleFileChange = async (event) => {
+        const rawFiles = Array.from(event.target.files);
+        const totalFiles = rawFiles.length;
+        setTotalFiles(totalFiles);
+        let completedFiles = 0;
+
+        const handleProgress = () => {
+            setTotalFiles(totalFiles);
+            setCompletedFiles(completedFiles);
+            const progress = Math.floor((completedFiles / totalFiles) * 100);
+            setProgress(progress);
+        };
+
+        // Convert each file to webP and update progress after each conversion
+        const files = await Promise.all(rawFiles.map(async (file) => {
+            const convertedFile = await convertToWebP(file);
+            completedFiles++;
+            handleProgress();
+            return convertedFile;
+        }));
+
+        console.log("files ", files);
+        setFileNames(files.map(file => file.name));
+        setImages(files.map(file => URL.createObjectURL(file))); // Create URLs for all files
+    };
 
     return (
         <div>
@@ -50,7 +84,7 @@ function ProfilePage({ user }) {
                                     name="name"
                                     control={control}
                                     defaultValue=""
-                                    render={({ field }) => <Input {...field} color='neutral' variant='soft' placeholder="Name of the Artwork" />}
+                                    render={({ field }) => <Input {...field} color='neutral' variant='soft' placeholder="Name of the Artwork" value={field.value || ""} />}
                                 />
                             </FormControl>
                             <FormControl>
@@ -61,23 +95,36 @@ function ProfilePage({ user }) {
                                     tabIndex={-1}
                                     variant="outlined"
                                     color="neutral"
-                                    startDecorator={<FileUploadRoundedIcon />}
+                                    startDecorator={
+                                        totalFiles > 0
+                                            ? <CircularProgress
+                                                sx={{ "--CircularProgress-trackThickness": "6px", "--CircularProgress-progressThickness": "4px" }}
+                                                size="md"
+                                                determinate
+                                                value={progress}
+                                            >
+                                                {completedFiles} / {totalFiles}
+                                            </CircularProgress>
+                                            : <FileUploadRoundedIcon />}
+
                                 >
                                     Upload a file
                                     <Controller
                                         name="file"
                                         control={control}
                                         defaultValue={null}
-                                        render={({ field }) => <VisuallyHiddenInput {...field} value={file} type="file" onChange={(event) => { field.onChange(event.target.files); handleFileChange(event); }} />}
+                                        render={({ field: { value, ...field } }) => <VisuallyHiddenInput {...field} type="file" multiple accept="image/*" onChange={(event) => { field.onChange(event.target.files); handleFileChange(event); }} />}
                                     />
                                 </Button>
-                                <Box
-                                // center the contents of the box 
-                                sx={{ mt: 2, display: 'flex', justifyContent: 'center',alignItems: 'center', flexDirection: 'column' }}
-                                >
-                                    {image && <img src={image} alt="uploaded" width="30%" height="30%" />}
-                                    {fileName && <Typography variant="body2">{fileName}</Typography>}
-                                </Box>
+                                <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '1rem', marginTop: '1rem' }}>
+                                    {images.map((url, index) => (
+                                        <span key={`${fileNames[index]}-${index}`}>
+                                            <Image src={url} width={100} height={100} alt={fileNames[index]} />
+                                            <Typography level="body-xs">{fileNames[index].length > 20 ? `${fileNames[index].substring(0, 17)}...` : fileNames[index]}</Typography>
+                                        </span>
+                                    ))}
+                                </div>
+
                             </FormControl>
                             <FormControl>
                                 <FormLabel>Description</FormLabel>
@@ -85,7 +132,7 @@ function ProfilePage({ user }) {
                                     name="description"
                                     control={control}
                                     defaultValue=""
-                                    render={({ field }) => <Textarea {...field} color="neutral" minRows={3} size="md" variant="soft" placeholder="Description of the Artwork" />}
+                                    render={({ field }) => <Textarea {...field} color="neutral" minRows={3} size="md" variant="soft" placeholder="Description of the Artwork" value={field.value || ""} />}
                                 />
                             </FormControl>
                             <FormControl>
@@ -94,7 +141,7 @@ function ProfilePage({ user }) {
                                     name="category"
                                     control={control}
                                     defaultValue=""
-                                    render={({ field }) => <Input {...field} color='neutral' variant='soft' placeholder="Category of the Artwork" />}
+                                    render={({ field }) => <Input {...field} color='neutral' variant='soft' placeholder="Category of the Artwork" value={field.value || ""} />}
                                 />
                             </FormControl>
                             <FormControl>
@@ -103,7 +150,7 @@ function ProfilePage({ user }) {
                                     name="tags"
                                     control={control}
                                     defaultValue=""
-                                    render={({ field }) => <Input {...field} color='neutral' variant='soft' placeholder="Tags for the Artwork" />}
+                                    render={({ field }) => <Input {...field} color='neutral' variant='soft' placeholder="Tags for the Artwork" value={field.value || ""} />}
                                 />
                             </FormControl>
                             <FormControl>
@@ -112,7 +159,7 @@ function ProfilePage({ user }) {
                                     name="price"
                                     control={control}
                                     defaultValue=""
-                                    render={({ field }) => <Input {...field} color='neutral' variant='soft' placeholder="Price of the Artwork" />}
+                                    render={({ field }) => <Input {...field} color='neutral' variant='soft' placeholder="Price of the Artwork" value={field.value || ""} />}
                                 />
                             </FormControl>
                             <FormControl>
@@ -121,7 +168,7 @@ function ProfilePage({ user }) {
                                     name="dimensions"
                                     control={control}
                                     defaultValue=""
-                                    render={({ field }) => <Input {...field} color='neutral' variant='soft' placeholder="Dimensions of the Artwork" />}
+                                    render={({ field }) => <Input {...field} color='neutral' variant='soft' placeholder="Dimensions of the Artwork" value={field.value || ""} />}
                                 />
                             </FormControl>
                             <FormControl>
@@ -130,7 +177,7 @@ function ProfilePage({ user }) {
                                     name="medium"
                                     control={control}
                                     defaultValue=""
-                                    render={({ field }) => <Input {...field} color='neutral' variant='soft' placeholder="Medium of the Artwork" />}
+                                    render={({ field }) => <Input {...field} color='neutral' variant='soft' placeholder="Medium of the Artwork" value={field.value || ""} />}
                                 />
                             </FormControl>
                             <FormControl>
@@ -139,7 +186,7 @@ function ProfilePage({ user }) {
                                     name="dateCreated"
                                     control={control}
                                     defaultValue=""
-                                    render={({ field }) => <Input {...field} color='neutral' variant='soft' placeholder="Date Created of the Artwork" />}
+                                    render={({ field }) => <Input {...field} color='neutral' variant='soft' placeholder="Date Created of the Artwork" value={field.value || ""} />}
                                 />
                             </FormControl>
                             <FormControl>
@@ -148,7 +195,7 @@ function ProfilePage({ user }) {
                                     name="inStock"
                                     control={control}
                                     defaultValue={false}
-                                    render={({ field }) => <Input {...field} color='neutral' variant='soft' placeholder="In Stock of the Artwork" />}
+                                    render={({ field }) => <Input {...field} color='neutral' variant='soft' placeholder="In Stock of the Artwork" value={field.value || ""} />}
                                 />
                             </FormControl>
                             <Button type="submit">Submit</Button>

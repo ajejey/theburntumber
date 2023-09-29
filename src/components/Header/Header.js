@@ -30,9 +30,9 @@ const Header = async () => {
                             sx={{ borderRadius: 40 }}
                         >
                             <Button>
-                                {session?.user ?
+                                {session?.picture ?
                                     <Avatar
-                                        src={session?.user?.image}
+                                        src={session?.picture}
                                     /> :
                                     <Avatar sx={{ bgcolor: 'var(--primary-color)', color: 'var(--background-color)' }}>U</Avatar>
                                 }

@@ -50,4 +50,4 @@ const userSchema = new mongoose.Schema({
     // Add more fields as needed for user management and future expansion
 });
 
-export default mongoose.models.User || mongoose.model('User', userSchema)
+export default mongoose?.models?.User || mongoose.model('User', userSchema)

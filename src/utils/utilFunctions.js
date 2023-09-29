@@ -26,9 +26,9 @@ export const convertToWebP = async (file) => {
 };
 
 export async function uploadToFireBase(file) {
-    console.log("FIREBASE_FOLDER ", process.env.FIREBASE_FOLDER)
+    console.log("FIREBASE_FOLDER ", process.env.NEXT_PUBLIC_FIREBASE_FOLDER)
     try {
-      const storageRef = ref(getStorage(), `devArtImages/` + file.name)
+      const storageRef = ref(getStorage(), `${process.env.NEXT_PUBLIC_FIREBASE_FOLDER}` + file.name)
       const snapshot = await uploadBytes(storageRef, file)
       const url = await getDownloadURL(snapshot.ref)
       console.log("Successfully uploaded to Firebase ", url)

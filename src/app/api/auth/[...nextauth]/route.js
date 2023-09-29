@@ -94,7 +94,7 @@ export const authOptions = {
             // console.log("INSIDE SESSION CALLBACK", session, token);
             // const user = token.user;
             // session.user = user;
-            return session;
+            return token;
         },
     },
     database: process.env.DATABASE_URL

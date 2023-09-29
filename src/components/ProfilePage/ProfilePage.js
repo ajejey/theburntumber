@@ -28,18 +28,37 @@ function ProfilePage({ user }) {
     const [progress, setProgress] = useState(0);
 
     const onSubmit = async (data) => {
-        const files = Object.values(data.file); // Convert data.file object into an array
-        await Promise.all(files.map(async (file) => {
-            const url = await uploadToFireBase(file);
-            data.firebaseUrls = data.firebaseUrls || []; 
-            data.firebaseUrls.push(url); // Add the Firebase URL to the data object
-        })); 
-        
-        // delete file key:value pair from data
-        delete data.file;
-        console.log(data);      
-    
-      }
+        if (data.file) {
+            const files = Object.values(data.file); // Convert data.file object into an array
+            await Promise.all(files.map(async (file) => {
+                const url = await uploadToFireBase(file);
+                data.firebaseUrls = data.firebaseUrls || [];
+                data.firebaseUrls.push(url); // Add the Firebase URL to the data object
+            }));
+
+            // delete file key:value pair from data
+            delete data.file;
+            console.log(data);
+            try {
+                const response = await fetch('/api/artUpload', {
+                    method: 'POST',
+                    body: JSON.stringify(data),
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                })
+                if (response.ok) {
+                    console.log('Artwork has been created. ');
+
+                }
+            } catch (error) {
+                console.log(error)
+            }
+        }
+        console.log(data);
+
+
+    }
 
     const handleFileChange = async (event) => {
         const rawFiles = Array.from(event.target.files);

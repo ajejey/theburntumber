@@ -6,13 +6,12 @@ import { redirect } from 'next/navigation'
 
 async function Profile() {
     const session = await getServerSession(authOptions)
-    console.log("session ", session)
-    if (!(session && session.user)) {
+    if (!(session)) {
         redirect('/login')
     }
-
+    const user = { ...session, id: session.id.toString() }
     return (
-        <ProfilePage user={session.user} />
+        <ProfilePage user={user} />
     )
 }
 

@@ -26,7 +26,6 @@ export const convertToWebP = async (file) => {
 };
 
 export async function uploadToFireBase(file) {
-    console.log("FIREBASE_FOLDER ", process.env.NEXT_PUBLIC_FIREBASE_FOLDER)
     try {
       const storageRef = ref(getStorage(), `${process.env.NEXT_PUBLIC_FIREBASE_FOLDER}` + file.name)
       const snapshot = await uploadBytes(storageRef, file)

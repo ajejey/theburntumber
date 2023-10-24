@@ -9,11 +9,13 @@ import { authOptions } from '@/app/api/auth/[...nextauth]/route';
 
 const Header = async () => {
     const session = await getServerSession(authOptions)
-    console.log("session inside Header", session)
+    // console.log("session inside Header", session)
 
     return (
         <header className={styles.header}>
-            <div className={styles.logo}></div>
+            <Link href="/" className='link'>
+                <div className={styles.logo}></div>
+            </Link>
             <div className={styles.search}>
                 <SearchBar />
                 <FilterList />

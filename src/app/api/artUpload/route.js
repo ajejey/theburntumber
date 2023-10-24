@@ -39,3 +39,9 @@ export const POST = async (request) => {
         return new Response(error, { status: 500 });
     }
 }
+
+// Get all artworks
+export const GET = async (request) => {
+    const artworks = await Artwork.find()
+    return new Response(JSON.stringify(artworks), { status: 200 })
+}

@@ -3,7 +3,12 @@ import mongoose from "mongoose";
 const artworkSchema = new mongoose.Schema({
     name: String,
     description: String,
-    images: [String],
+    images: [{
+        url: String,
+        name: String,
+        height: Number,
+        width: Number
+    }],
     artist: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',

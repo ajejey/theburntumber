@@ -3,6 +3,7 @@ import styles from './page.module.css'
 import Header from '../components/Header/Header'
 import Artwork from '@/models/Artwork'
 import HomeGallery from '@/components/HomeGallery/HomeGallery'
+import { getBase64 } from '@/utils/utilFunctions'
 
 
 
@@ -12,7 +13,7 @@ const fetchArtWorks = async () => {
     // const artWorks = await Artwork.find()
     const res = await fetch('http://localhost:3000/api/artUpload',{
       next: {
-        revalidate: 3600,
+        revalidate: 10,
       },
     })
     const artWorks = await res.json()
@@ -24,12 +25,25 @@ const fetchArtWorks = async () => {
 }
 
 export default async function Home() {
-  const artWorks = await fetchArtWorks()
-  // console.log("ART WORKS", artWorks)
+  const artWorks = await fetchArtWorks();
+
+  // // Fetch base64 images for all artworks in parallel
+  // const artWorksWithBase64 = await Promise.all(
+  //   artWorks.map(async (artwork) => {
+  //     const imagesWithBase64 = await Promise.all(
+  //       artwork.images.map(async (image) => {
+  //         const blurUrl = await getBase64(image.url);
+  //         return { ...image, blurUrl };
+  //       })
+  //     );
+  //     return { ...artwork, images: imagesWithBase64 };
+  //   })
+  // );
+
   return (
     <main className={styles.main}>
       <Header />
       <HomeGallery artWorks={artWorks} />
     </main>
-  )
+  );
 }

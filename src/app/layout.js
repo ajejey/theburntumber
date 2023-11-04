@@ -12,13 +12,15 @@ export const metadata = {
   description: 'The Burnt Umber',
 }
 
-export default function RootLayout({ children }) {
+export default function RootLayout(props) {
+  console.log("PROPS", props)
   return (
     <html lang="en">
       <body className={inter.className}>
         <Toaster richColors />
         <AuthProvider>
-            {children}         
+            {props.children} 
+            {props.parallel}        
         </AuthProvider>
       </body>
     </html>

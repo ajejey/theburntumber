@@ -6,26 +6,29 @@ function ImageComponent({ images }) {
     // console.log("IMAGES ", images)
     const blurredBase64 = "data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mN89fLlfwAJPgO9NgsRFQAAAABJRU5ErkJggg==";
 
-    const widthHeightRatio = images[0].height / images[0].width
+    const widthHeightRatio = images.images[0].height / images.images[0].width
     const galleryHeight = Math.ceil(250 * widthHeightRatio)
     const photoSpans = Math.ceil(galleryHeight / 10) + 1
 
     return (
-        <div style={{display: "grid", gridRowEnd: `span ${photoSpans}`}} >
-            <Image
-                src={images[0].url}
-                alt={images[0].name || 'art'}
-                width={250}
-                style={{ width: "100%", height: "100%" }}
-                // height={images[0].height}
-                height={galleryHeight}
-                sizes='250px'
-                placeholder='blur'
-                blurDataURL={blurredBase64}
-            />
+        <div style={{ display: "grid", gridRowEnd: `span ${photoSpans}`, padding: "0 0 24px" }} >
+            <Link href={`/art/${images._id}`} scroll={false}>
+                <Image
+                    src={images.images[0].url}
+                    alt={images.images[0].name || 'art'}
+                    width={250}
+                    style={{ width: "100%", height: "100%" }}
+                    // height={images[0].height}
+                    height={galleryHeight}
+                    sizes='250px'
+                    placeholder='blur'
+                    blurDataURL={blurredBase64}
+                />
+                <p>{images.name }</p>
+            </Link>
         </div>
-            
-        
+
+
     )
 }
 

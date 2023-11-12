@@ -1,6 +1,7 @@
 .main {
   background-color: var(--background-color);
   color: var(--text-color);
+  padding-bottom: 4ch;
 }
 
 .description {

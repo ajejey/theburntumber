@@ -13,7 +13,7 @@ export const metadata = {
 }
 
 export default function RootLayout(props) {
-  console.log("PROPS", props)
+  // console.log("PROPS", props)
   return (
     <html lang="en">
       <body className={inter.className}>

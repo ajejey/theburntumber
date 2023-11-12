@@ -4,6 +4,7 @@ import Header from '../components/Header/Header'
 import Artwork from '@/models/Artwork'
 import HomeGallery from '@/components/HomeGallery/HomeGallery'
 import { getBase64 } from '@/utils/utilFunctions'
+import { CssBaseline } from '@mui/joy'
 
 
 
@@ -42,6 +43,7 @@ export default async function Home() {
 
   return (
     <main className={styles.main}>
+      <CssBaseline enableColorScheme />
       <Header />
       <HomeGallery artWorks={artWorks} />
     </main>

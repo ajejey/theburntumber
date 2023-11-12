@@ -85,20 +85,56 @@ body {
   padding-left: 15px;
 }
 
-.my-masonry-grid {
-  display: -webkit-box; /* Not needed if autoprefixing */
-  display: -ms-flexbox; /* Not needed if autoprefixing */
+/* WebKit-based browsers (Chrome, Safari) */
+/* Track */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 6px;
+  transition: background 0.3s;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  transition: background 0.3s;
+}
+
+/* Track on hover */
+::-webkit-scrollbar-track:hover {
+  background: #ddd;
+}
+
+/* Firefox */
+/* Track */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #f1f1f1 #888;
+}
+
+
+/* .my-masonry-grid {
+  display: -webkit-box; 
+  display: -ms-flexbox; 
   display: flex;
-  margin-left: -30px; /* gutter size offset */
+  margin-left: -30px; 
   width: auto;
 }
 .my-masonry-grid_column {
-  padding-left: 30px; /* gutter size */
+  padding-left: 30px; 
   background-clip: padding-box;
 }
 
-/* Style your items */
-.my-masonry-grid_column > div { /* change div to reference your elements you put in <Masonry> */
+.my-masonry-grid_column > div { 
   background: grey;
   margin-bottom: 30px;
 }
@@ -130,7 +166,7 @@ body {
 
 .modal.light{
   background: rgba(255,255,255,0.3);
-}
+} */
 
 @media (min-width: 576px) {
   .container {

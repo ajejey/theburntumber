@@ -19,9 +19,11 @@ function ModalComponent({ children, bg }) {
 
     return (
         <Dialog open onClose={handleClose} scroll='paper' fullWidth maxWidth='xl'>
-            
-            <DialogContent>{children}</DialogContent>
-            
+
+            <DialogContent>
+                {children}
+            </DialogContent>
+
         </Dialog>
     )
 }

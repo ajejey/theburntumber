@@ -28,19 +28,6 @@ const fetchArtWorks = async () => {
 export default async function Home() {
   const artWorks = await fetchArtWorks();
 
-  // // Fetch base64 images for all artworks in parallel
-  // const artWorksWithBase64 = await Promise.all(
-  //   artWorks.map(async (artwork) => {
-  //     const imagesWithBase64 = await Promise.all(
-  //       artwork.images.map(async (image) => {
-  //         const blurUrl = await getBase64(image.url);
-  //         return { ...image, blurUrl };
-  //       })
-  //     );
-  //     return { ...artwork, images: imagesWithBase64 };
-  //   })
-  // );
-
   return (
     <main className={styles.main}>
       <CssBaseline enableColorScheme />

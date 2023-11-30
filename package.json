@@ -28,6 +28,7 @@
     "react-dom": "^18.2.0",
     "react-hook-form": "^7.46.1",
     "sharp": "^0.32.6",
+    "slugify": "^1.6.6",
     "sonner": "^1.0.3"
   },
   "devDependencies": {

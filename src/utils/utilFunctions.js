@@ -60,6 +60,14 @@ export async function uploadToFireBase(file) {
     }
 }
 
+export function convertSpacesToDashes(string) {
+    return string.replace(/\s+/g, '-');
+}
+
+export function convertDashesToSpaces(string) {
+    return string.replace(/-/g, ' ');
+}
+
 // export async function getBase64(imageUrl) {
 //     try {
 //         const res = await fetch(imageUrl)

@@ -8,7 +8,9 @@ import CircularProgress from '@mui/joy/CircularProgress';
 import Image from 'next/image';
 import { toast } from 'sonner';
 
-// npm install -S react-advanced-cropper
+// TODO: Add image cropper: npm install -S react-advanced-cropper
+
+// TODO: Add rich text editor: https://tiptap.dev/introduction
 
 const VisuallyHiddenInput = styled('input')`
   clip: rect(0 0 0 0);

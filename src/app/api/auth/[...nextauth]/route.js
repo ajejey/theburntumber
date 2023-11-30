@@ -29,16 +29,20 @@ export const authOptions = {
                 await connect()
 
                 try {
-                    const user = User.findOne({ email: credentials?.email })
+                    const user = await User.findOne({ email: credentials?.email })
                     if (user) {
+                        console.log("USER FOUND IN DB", user)
                         const passwordMatch = await bcrypt.compare(credentials?.password, user.password)
                         if (passwordMatch) {
+                            console.log("PASSWORDS MATCH")
                             return user
                         } else {
+                            console.log("PASSWORDS DO NOT MATCH")
                             throw new Error("Wrong password")
                         }
                     }
                 } catch (error) {
+                    console.log("ERROR", error)
                     throw new Error("Database error")
                 }
             }

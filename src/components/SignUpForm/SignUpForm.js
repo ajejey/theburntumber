@@ -1,5 +1,4 @@
 'use client'
-import Header from '@/components/Header/Header'
 import React from 'react'
 import styles from './signUp.module.css'
 import { Grid, TextField, Button } from '@mui/material'
@@ -7,7 +6,9 @@ import { Controller, useForm } from 'react-hook-form';
 import Link from 'next/link'
 import GoogleIcon from '@mui/icons-material/Google';
 import { signIn } from 'next-auth/react'
+import { toast } from 'sonner';
 
+// https://www.npmjs.com/package/slugify
 
 function SignUpForm() {
     const { handleSubmit, control, watch, formState: { errors } } = useForm();
@@ -25,15 +26,16 @@ function SignUpForm() {
             })
             if (response.ok) {
                 console.log('User has been created.')
+                toast.success('Signed up successfully.')
             }
         } catch (error) {
             console.log(error)
+            toast.error('Something went wrong. Please try again later.')
         }
     }
 
     return (
         <div>
-            <Header />
             <div className="container">
                 <div className={styles.formContainer}>
                     <div className={styles.formPaper}>
@@ -102,7 +104,7 @@ function SignUpForm() {
                                     </div>
 
                                     <div className={styles.formInput}>
-                                        <label htmlFor='confirmPassword' className={styles.label}>Repeat Password</label>
+                                        <label htmlFor='confirmPassword' className={styles.label}>Confirm Password</label>
                                         <Controller
                                             name="confirmPassword"
                                             control={control}
@@ -126,7 +128,7 @@ function SignUpForm() {
                                         />
                                     </div>
 
-                                    <Button type="submit" variant="contained" color="primary" fullWidth>Submit</Button>
+                                    <Button type="submit" variant="contained" color="primary" fullWidth>Sign Up</Button>
                                 </form>
                                 <div className={styles.formInput}>
                                     <Button

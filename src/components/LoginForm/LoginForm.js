@@ -1,6 +1,5 @@
 'use client'
 import { useRouter } from 'next/router'
-import Header from '@/components/Header/Header'
 import { Button, TextField } from '@mui/material'
 import { signIn, useSession } from 'next-auth/react'
 import React from 'react'
@@ -25,8 +24,7 @@ function LoginForm() {
 
 
     return (
-        <div>
-            <Header />
+        <div>            
             <div className="container">
                 <div className={styles.formContainer}>
                     <div className={styles.formPaper}>

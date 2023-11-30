@@ -2,6 +2,7 @@ import connect from "@/utils/db";
 import { NextResponse } from "next/server";
 import User from "@/models/User";
 import bcrypt from "bcryptjs"
+import slugify from "slugify";
 
 
 export const POST = async (request) => {
@@ -14,7 +15,7 @@ export const POST = async (request) => {
         console.log("ERROR CONNECTING TO DB", error);
     }
 
-
+    // TODO: Add slugify https://www.npmjs.com/package/slugify
     // TODO: use a library to validate 
     if (!fullName || !email || !password || !confirmPassword) {
         console.log("All fields are required.");
@@ -41,7 +42,11 @@ export const POST = async (request) => {
         }
     }
 
-    const newUser = new User({ fullName, email, password: hashedPassword });
+    const slugFullName = slugify(fullName, { lower: true, remove: /[*+~.()'"!:@]/g });
+
+    const phoneNo = Math.random().toString(36).substring(2, 10);
+
+    const newUser = new User({ fullName, email, password: hashedPassword, slugFullName, phoneNo });
 
     try {
         await newUser.save();

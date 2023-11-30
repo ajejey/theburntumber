@@ -23,14 +23,8 @@ async function Art({params}) {
     const artWorks = await fetchArtWorks();
     const artWork = artWorks.find((artwork) => artwork._id === params.id)
   return (
-    <ModalComponent bg="light">
-    {/* <div className="photo-container"> */}
-       {console.log("INSIDE ART MODAL CLIENT COMPONENT")}
-       <div>asf</div>
+    <ModalComponent> 
         <ArtPage artWork={artWork} />
-      
-        
-    {/* </div> */}
     </ModalComponent>
   )
 }

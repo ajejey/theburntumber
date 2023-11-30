@@ -4,6 +4,7 @@ import mongoose from "mongoose";
 
 const userSchema = new mongoose.Schema({
     fullName: String,
+    slugFullName: String,
     profilePicture: String,
     email: {
         type: String,
@@ -21,13 +22,11 @@ const userSchema = new mongoose.Schema({
     },
     phoneNo: {
         type: String,
-        unique: true,
     },
     role: {
         type: String,
         enum: ['artist', 'customer'],
     },
-    // Additional artist-related fields
     artistInfo: {
         bio: String,
         artworks: [
